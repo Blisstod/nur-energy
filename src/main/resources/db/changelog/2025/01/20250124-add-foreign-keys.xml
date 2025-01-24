@@ -1,0 +1,55 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20250124-add-foreign-keys" author="nur">
+        <addForeignKeyConstraint baseTableName="order"
+                                 baseColumnNames="USER_ID"
+                                 constraintName="fk_order_user"
+                                 referencedTableName="user"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="order"
+                                 baseColumnNames="START_POINT"
+                                 constraintName="fk_order_start_point"
+                                 referencedTableName="control_point"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="order"
+                                 baseColumnNames="DESTINATION_POINT"
+                                 constraintName="fk_order_destination_point"
+                                 referencedTableName="control_point"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="order"
+                                 baseColumnNames="DRIVER_ID"
+                                 constraintName="fk_order_driver"
+                                 referencedTableName="user"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="order"
+                                 baseColumnNames="CAR_ID"
+                                 constraintName="fk_order_car"
+                                 referencedTableName="auto"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="auto"
+                                 baseColumnNames="MODEL_ID"
+                                 constraintName="fk_auto_model"
+                                 referencedTableName="auto_model"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="auto"
+                                 baseColumnNames="USER_ID"
+                                 constraintName="fk_auto_user"
+                                 referencedTableName="user"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="auto_model"
+                                 baseColumnNames="BRAND_ID"
+                                 constraintName="fk_auto_model_brand"
+                                 referencedTableName="auto_brand"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+</databaseChangeLog>

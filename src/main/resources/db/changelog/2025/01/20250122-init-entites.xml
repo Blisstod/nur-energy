@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20250122-init-order-table" author="nur">
+        <createTable tableName="order">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="TIMESTAMP"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="TIMESTAMP"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="TIMESTAMP"/>
+            <column name="USER_ID" type="UUID"/>
+            <column name="STATUS" type="VARCHAR(50)"/>
+            <column name="PHONE_NUMBER" type="VARCHAR(20)"/>
+            <column name="START_POINT" type="UUID"/>
+            <column name="DESTINATION_POINT" type="UUID"/>
+            <column name="PRICE" type="DECIMAL(19,2)"/>
+            <column name="DRIVER_ID" type="UUID"/>
+            <column name="CAR_ID" type="UUID"/>
+            <column name="DISTANCE" type="DOUBLE"/>
+            <column name="PICK_UP_TIME" type="TIMESTAMP"/>
+            <column name="START_ADDRESS" type="VARCHAR(255)"/>
+            <column name="DESTINATION_ADDRESS" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20250122-init-control-point-table" author="nur">
+        <createTable tableName="control_point">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="TIMESTAMP"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="TIMESTAMP"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="TIMESTAMP"/>
+            <column name="ADDRESS" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LONGITUDE" type="DOUBLE"/>
+            <column name="LATITUDE" type="DOUBLE"/>
+            <column name="IS_SYSTEM" type="BOOLEAN" defaultValueBoolean="true"/>
+            <column name="CODE" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20250122-init-auto-table" author="nur">
+        <createTable tableName="auto">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="TIMESTAMP"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="TIMESTAMP"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="TIMESTAMP"/>
+            <column name="NUM" type="VARCHAR(16)"/>
+            <column name="MODEL_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_ACTIVE" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="USER_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20250122-init-auto-model-table" author="nur">
+        <createTable tableName="auto_model">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="TIMESTAMP"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="TIMESTAMP"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="TIMESTAMP"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BRAND_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20250122-init-auto-brand-table" author="nur">
+        <createTable tableName="auto_brand">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="TIMESTAMP"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="TIMESTAMP"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="TIMESTAMP"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20250122-insert-admin-user" author="nur">
+        <insert tableName="user">
+            <column name="ID" value="63a35a86-bb93-4d75-9ace-b2683f72b232"/>
+            <column name="USERNAME" value="admin"/>
+            <column name="PASSWORD" value="admin123"/>
+            <column name="FIRST_NAME" value="Admin"/>
+            <column name="LAST_NAME" value="User"/>
+            <column name="EMAIL" value="admin@example.com"/>
+            <column name="MOBILE_NUM" value="1234567890"/>
+            <column name="USER_TYPE" value="ADMIN"/>
+            <column name="CREATED_DATE" value="2025-01-22T00:00:00"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

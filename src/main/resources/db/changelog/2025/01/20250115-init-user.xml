@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20250115-init-user-table" author="nur">
+        <createTable tableName="user">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="TIMESTAMP"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="TIMESTAMP"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="TIMESTAMP"/>
+            <column name="USERNAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" type="VARCHAR(255)"/>
+            <column name="FIRST_NAME" type="VARCHAR(255)"/>
+            <column name="LAST_NAME" type="VARCHAR(255)"/>
+            <column name="EMAIL" type="VARCHAR(255)"/>
+            <column name="MOBILE_NUM" type="VARCHAR(20)"/>
+            <column name="USER_TYPE" type="VARCHAR(50)"/>
+        </createTable>
+
+<!--        <createIndex tableName="USER" indexName="idx_user_username">-->
+<!--            <column name="USERNAME"/>-->
+<!--        </createIndex>-->
+
+    </changeSet>
+</databaseChangeLog>
