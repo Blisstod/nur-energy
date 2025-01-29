@@ -9,7 +9,7 @@ public enum OrderStatus {
     ACCEPTED("Принят"),
     IN_PROGRESS("В процессе"),
     FINISHED("Завершен"),
-    REJECTED("Отменен пользователем");
+    CANCELLED("Отменен пользователем");
 
     private String description;
 
