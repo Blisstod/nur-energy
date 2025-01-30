@@ -1,5 +1,7 @@
 package kz.nur.energy.dto;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import kz.nur.energy.entity.ControlPoint;
 import kz.nur.energy.entity.Order;
 import kz.nur.energy.enums.OrderStatus;
@@ -19,20 +21,41 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@Schema(description = "Ответ на запрос заказа")
 public class OrderResponse {
+    @Schema(description = "Идентификатор заказа", example = "550e8400-e29b-41d4-a716-446655440000")
     private UUID id;
+
+    @Schema(description = "Дата создания заказа")
     private Date createdDate;
+
+    @Schema(description = "Статус заказа")
     private OrderStatus status;
+
+    @Schema(description = "Номер телефона клиента", example = "+77011234567")
     private String phoneNumber;
+
+    @Schema(description = "Цена поездки", example = "1500.00")
     private BigDecimal price;
+
+    @Schema(description = "Расстояние поездки в км", example = "12.5")
     private Double distance;
+
+    @Schema(description = "Адрес отправления")
     private String startAddress;
+
+    @Schema(description = "Адрес назначения")
     private String destinationAddress;
+
+    @Schema(description = "Время подачи")
     private LocalDateTime pickUpTime;
 
     //TODO: add auto, user, driver
 
+    @Parameter(description = "Адрес откуда", name = "startPoint", required = true)
     private ControlPointResponse startPoint;
+
+    @Parameter(description = "Адрес куда", name = "destinationPoint", required = true)
     private ControlPointResponse destinationPoint;
 
     public static OrderResponse of(final Order order) {

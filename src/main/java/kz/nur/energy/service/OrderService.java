@@ -60,7 +60,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse cancelOrder(UUID orderId, String comment) {
+    public OrderResponse cancelOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(OrderStatus.CANCELLED);
