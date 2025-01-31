@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Setter
 @Table(name = "auto_model")
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class AutoModel {
     @GeneratedValue
     @Column(name = "ID", nullable = false)

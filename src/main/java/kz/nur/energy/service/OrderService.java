@@ -4,6 +4,7 @@ import kz.nur.energy.dto.OrderRequest;
 import kz.nur.energy.dto.OrderResponse;
 import kz.nur.energy.entity.ControlPoint;
 import kz.nur.energy.entity.Order;
+import kz.nur.energy.entity.User;
 import kz.nur.energy.enums.OrderStatus;
 import kz.nur.energy.repository.ControlPointRepository;
 import kz.nur.energy.repository.OrderRepository;
@@ -63,6 +64,9 @@ public class OrderService {
     public OrderResponse cancelOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+//        order.setCar(null);
+        order.setDriver(null);
+        order.setDriver(null);
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
         return OrderResponse.of(order);
@@ -72,8 +76,10 @@ public class OrderService {
     public OrderResponse bookOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+        User driver = SecurityUtils.getCurrentUser();
         order.setStatus(OrderStatus.ACCEPTED);
-        order.setDriver(SecurityUtils.getCurrentUser());
+        order.setDriver(driver);
+//        order.setCar(driver.getAutoList().get(0));
         orderRepository.save(order);
         return OrderResponse.of(order);
     }

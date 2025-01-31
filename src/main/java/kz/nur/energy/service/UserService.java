@@ -23,9 +23,9 @@ public class UserService {
     private JwtUtils jwtUtils;
 
     public String registerUser(RegisterUserRequest registerUserRequest) {
-        String normalizedPhone = normalizePhoneNumber(registerUserRequest.getMobileNum());
+//        String normalizedPhone = normalizePhoneNumber(registerUserRequest.getMobileNum());
 
-        Optional<User> existingUser = userRepository.findByMobileNum(normalizedPhone);
+        Optional<User> existingUser = userRepository.findByMobileNum(registerUserRequest.getMobileNum());
         if (existingUser.isPresent()) {
             User user = existingUser.get();
             if (registerUserRequest.getFirstName() != null) user.setFirstName(registerUserRequest.getFirstName());
@@ -36,10 +36,12 @@ public class UserService {
         }
 
         User newUser = new User();
-        newUser.setMobileNum(normalizedPhone);
+        newUser.setMobileNum(registerUserRequest.getMobileNum());
         newUser.setUsername(registerUserRequest.getMobileNum());
         newUser.setFirstName(registerUserRequest.getFirstName());
         newUser.setLastName(registerUserRequest.getLastName());
+        newUser.setEmail(registerUserRequest.getEmail());
+        newUser.setUserType(registerUserRequest.getUserType());
         newUser.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
         userRepository.save(newUser);
 
@@ -47,7 +49,7 @@ public class UserService {
     }
 
     public String login(String mobileNum, String password) {
-        String normalizedPhone = normalizePhoneNumber(mobileNum);
+        String normalizedPhone = mobileNum;
 
         User user = userRepository.findByMobileNum(normalizedPhone)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
@@ -59,8 +61,8 @@ public class UserService {
         return jwtUtils.generateToken(user.getUsername());
     }
 
-    private String normalizePhoneNumber(String phoneNumber) {
-        return phoneNumber.replaceAll("[^0-9]", "");
-    }
+//    private String normalizePhoneNumber(String phoneNumber) {
+//        return phoneNumber.replaceAll("[^0-9]", "");
+//    }
 }
 
