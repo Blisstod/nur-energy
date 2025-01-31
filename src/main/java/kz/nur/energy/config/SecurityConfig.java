@@ -39,7 +39,7 @@ public class SecurityConfig {
                                 "/rest/register",
                                 "/rest/login"
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
