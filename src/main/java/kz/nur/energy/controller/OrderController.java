@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.nur.energy.dto.OrderRequest;
 import kz.nur.energy.dto.OrderResponse;
 import kz.nur.energy.service.OrderService;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "API для работы с заказами")
 @RequestMapping(value = "/rest/taxi/order")
 public class OrderController {
 
@@ -64,4 +66,6 @@ public class OrderController {
             @Parameter(description = "ID заказа") @PathVariable UUID orderId) {
         return ResponseEntity.ok(orderService.bookOrder(orderId));
     }
+
+    // TODO: vacant orders for drivers
 }

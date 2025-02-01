@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
@@ -101,6 +102,6 @@ public class OrderService {
     }
 
     private ControlPoint getControlPoint(UUID controlPointId) {
-        return controlPointRepository.findById(controlPointId).orElseThrow(() -> new RuntimeException("ControlPoint not found"));
+        return controlPointRepository.findById(controlPointId).orElseThrow(() -> new NoSuchElementException("ControlPoint not found"));
     }
 }
