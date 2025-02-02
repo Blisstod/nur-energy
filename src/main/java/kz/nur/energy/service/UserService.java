@@ -1,5 +1,6 @@
 package kz.nur.energy.service;
 
+import kz.nur.energy.dto.LoginUserRequest;
 import kz.nur.energy.dto.RegisterUserRequest;
 import kz.nur.energy.entity.User;
 import kz.nur.energy.repository.UserRepository;
@@ -48,10 +49,11 @@ public class UserService {
         return jwtUtils.generateToken(newUser.getUsername());
     }
 
-    public String login(String mobileNum, String password) {
-        String normalizedPhone = mobileNum;
+    public String login(LoginUserRequest loginUserRequest) {
+        String mobileNum = loginUserRequest.getMobileNum();
+        String password = loginUserRequest.getPassword();
 
-        User user = userRepository.findByMobileNum(normalizedPhone)
+        User user = userRepository.findByMobileNum(mobileNum)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {

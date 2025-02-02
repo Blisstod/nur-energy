@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import kz.nur.energy.dto.LoginUserRequest;
 import kz.nur.energy.dto.RegisterUserRequest;
 import kz.nur.energy.dto.UserInfo;
 import kz.nur.energy.entity.User;
@@ -40,9 +41,9 @@ public class UserController {
     @Operation(summary = "Вход в систему", description = "Аутентифицирует пользователя по номеру телефона и паролю")
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> login(
-            @RequestParam String mobileNum,
-            @RequestParam String password) {
-        String token = userService.login(mobileNum, password);
+            @RequestBody @Validated LoginUserRequest loginUserRequest
+    ) {
+        String token = userService.login(loginUserRequest);
         return ResponseEntity.ok(token);
     }
 
