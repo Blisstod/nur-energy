@@ -9,6 +9,7 @@ import kz.nur.energy.dto.RegisterUserRequest;
 import kz.nur.energy.dto.TokenResponse;
 import kz.nur.energy.dto.UserInfo;
 import kz.nur.energy.entity.User;
+import kz.nur.energy.exceptions.UnauthorizedException;
 import kz.nur.energy.service.UserService;
 import kz.nur.energy.service.auth.CustomUserDetails;
 import kz.nur.energy.utils.SecurityUtils;
@@ -49,8 +50,13 @@ public class UserController {
     @Operation(summary = "Получение информации об авторизованном пользователе", description = "Выдает информацию о пользователе который авторизовался")
     @GetMapping(value = "/visitor/info", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getVisitorInfo() {
+    public ResponseEntity<UserInfo> getVisitorInfo() {
         User currentUser = SecurityUtils.getCurrentUser();
+
+        if (currentUser == null) {
+            throw new UnauthorizedException("Нужна авторизация");
+        }
+
         return ResponseEntity.ok(UserInfo.of(currentUser));
     }
 }

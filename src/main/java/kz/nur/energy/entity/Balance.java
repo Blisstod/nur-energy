@@ -1,7 +1,6 @@
 package kz.nur.energy.entity;
 
 import jakarta.persistence.*;
-import kz.nur.energy.enums.UserTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,19 +11,17 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
+@Entity
 @Getter
 @Setter
-@Entity
-@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class User implements Serializable {
+@Table(name = "balance")
+public class Balance {
     @Column(name = "ID", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,39 +45,11 @@ public class User implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
-    @Column(name = "DELETED_BY")
-    private String deletedBy;
+    @Column(name = "BALANCE")
+    private Long balance = 0L;
 
-    @Column(name = "DELETED_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date deletedDate;
+    @JoinColumn(name = "USER_ID", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    private User user;
 
-    @Column(name = "USERNAME", nullable = false)
-    protected String username;
-
-    @Column(name = "PASSWORD")
-    protected String password;
-
-    @Column(name = "FIRST_NAME")
-    protected String firstName;
-
-    @Column(name = "LAST_NAME")
-    protected String lastName;
-
-    @Column(name = "EMAIL")
-    protected String email;
-
-    @Column(name = "MOBILE_NUM")
-    private String mobileNum;
-
-    @JoinColumn(name = "BALANCE_ID")
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private Balance balance;
-
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    private List<Auto> autoList;
-
-    @Column(name = "USER_TYPE")
-    @Enumerated(EnumType.STRING)
-    private UserTypeEnum userType;
 }

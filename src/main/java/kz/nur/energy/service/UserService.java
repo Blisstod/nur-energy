@@ -3,15 +3,17 @@ package kz.nur.energy.service;
 import kz.nur.energy.dto.LoginUserRequest;
 import kz.nur.energy.dto.RegisterUserRequest;
 import kz.nur.energy.dto.TokenResponse;
+import kz.nur.energy.entity.Balance;
 import kz.nur.energy.entity.User;
+import kz.nur.energy.repository.BalanceRepository;
 import kz.nur.energy.repository.UserRepository;
 import kz.nur.energy.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -19,17 +21,29 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private BalanceRepository balanceRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Transactional
     public TokenResponse registerUser(RegisterUserRequest registerUserRequest) {
         Optional<User> existingUser = userRepository.findByMobileNum(registerUserRequest.getMobileNum());
         if (existingUser.isPresent()) {
             User user = existingUser.get();
             if (registerUserRequest.getFirstName() != null) user.setFirstName(registerUserRequest.getFirstName());
             if (registerUserRequest.getLastName() != null) user.setLastName(registerUserRequest.getLastName());
+
+            if (user.getBalance() == null) {
+                Balance newBalance = new Balance();
+                newBalance.setUser(user);
+                balanceRepository.save(newBalance);
+                user.setBalance(newBalance);
+            }
+
             userRepository.save(user);
 
             return new TokenResponse(jwtUtils.generateToken(user.getUsername()));
@@ -43,11 +57,18 @@ public class UserService {
         newUser.setEmail(registerUserRequest.getEmail());
         newUser.setUserType(registerUserRequest.getUserType());
         newUser.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
+
+        Balance newBalance = new Balance();
+        newBalance.setUser(newUser);
+        balanceRepository.save(newBalance);
+
+        newUser.setBalance(newBalance);
         userRepository.save(newUser);
 
         return new TokenResponse(jwtUtils.generateToken(newUser.getUsername()));
     }
 
+    @Transactional
     public TokenResponse login(LoginUserRequest loginUserRequest) {
         String mobileNum = loginUserRequest.getMobileNum();
         String password = loginUserRequest.getPassword();
@@ -59,11 +80,15 @@ public class UserService {
             throw new IllegalArgumentException("Неверный пароль");
         }
 
+        if (user.getBalance() == null) {
+            Balance newBalance = new Balance();
+            newBalance.setUser(user);
+            balanceRepository.save(newBalance);
+            user.setBalance(newBalance);
+            userRepository.save(user);
+        }
+
         return new TokenResponse(jwtUtils.generateToken(user.getUsername()));
     }
-
-//    private String normalizePhoneNumber(String phoneNumber) {
-//        return phoneNumber.replaceAll("[^0-9]", "");
-//    }
 }
 

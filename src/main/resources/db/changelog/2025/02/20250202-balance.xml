@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-balance-table" author="nur">
+        <createTable tableName="balance">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="TIMESTAMP"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="TIMESTAMP"/>
+            <column name="BALANCE" type="BIGINT" defaultValue="0"/>
+            <column name="USER_ID" type="UUID">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseColumnNames="USER_ID"
+                baseTableName="balance"
+                constraintName="FK_BALANCE_USER"
+                referencedColumnNames="ID"
+                referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="add-balance-id-to-users" author="nur">
+        <addColumn tableName="users">
+            <column name="BALANCE_ID" type="UUID"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseColumnNames="BALANCE_ID"
+                baseTableName="users"
+                constraintName="FK_USER_BALANCE"
+                referencedColumnNames="ID"
+                referencedTableName="balance"/>
+    </changeSet>
+</databaseChangeLog>
