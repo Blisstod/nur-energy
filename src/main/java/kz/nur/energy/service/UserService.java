@@ -2,6 +2,7 @@ package kz.nur.energy.service;
 
 import kz.nur.energy.dto.LoginUserRequest;
 import kz.nur.energy.dto.RegisterUserRequest;
+import kz.nur.energy.dto.TokenResponse;
 import kz.nur.energy.entity.User;
 import kz.nur.energy.repository.UserRepository;
 import kz.nur.energy.utils.JwtUtils;
@@ -23,9 +24,7 @@ public class UserService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    public String registerUser(RegisterUserRequest registerUserRequest) {
-//        String normalizedPhone = normalizePhoneNumber(registerUserRequest.getMobileNum());
-
+    public TokenResponse registerUser(RegisterUserRequest registerUserRequest) {
         Optional<User> existingUser = userRepository.findByMobileNum(registerUserRequest.getMobileNum());
         if (existingUser.isPresent()) {
             User user = existingUser.get();
@@ -33,7 +32,7 @@ public class UserService {
             if (registerUserRequest.getLastName() != null) user.setLastName(registerUserRequest.getLastName());
             userRepository.save(user);
 
-            return jwtUtils.generateToken(user.getUsername());
+            return new TokenResponse(jwtUtils.generateToken(user.getUsername()));
         }
 
         User newUser = new User();
@@ -46,10 +45,10 @@ public class UserService {
         newUser.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
         userRepository.save(newUser);
 
-        return jwtUtils.generateToken(newUser.getUsername());
+        return new TokenResponse(jwtUtils.generateToken(newUser.getUsername()));
     }
 
-    public String login(LoginUserRequest loginUserRequest) {
+    public TokenResponse login(LoginUserRequest loginUserRequest) {
         String mobileNum = loginUserRequest.getMobileNum();
         String password = loginUserRequest.getPassword();
 
@@ -60,7 +59,7 @@ public class UserService {
             throw new IllegalArgumentException("Неверный пароль");
         }
 
-        return jwtUtils.generateToken(user.getUsername());
+        return new TokenResponse(jwtUtils.generateToken(user.getUsername()));
     }
 
 //    private String normalizePhoneNumber(String phoneNumber) {
