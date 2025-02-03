@@ -3,6 +3,7 @@ package kz.nur.energy.service;
 import kz.nur.energy.dto.LoginUserRequest;
 import kz.nur.energy.dto.RegisterUserRequest;
 import kz.nur.energy.dto.TokenResponse;
+import kz.nur.energy.dto.UserInfo;
 import kz.nur.energy.entity.Balance;
 import kz.nur.energy.entity.User;
 import kz.nur.energy.repository.BalanceRepository;
@@ -69,7 +70,7 @@ public class UserService {
     }
 
     @Transactional
-    public TokenResponse login(LoginUserRequest loginUserRequest) {
+    public UserInfo login(LoginUserRequest loginUserRequest) {
         String mobileNum = loginUserRequest.getMobileNum();
         String password = loginUserRequest.getPassword();
 
@@ -88,7 +89,9 @@ public class UserService {
             userRepository.save(user);
         }
 
-        return new TokenResponse(jwtUtils.generateToken(user.getUsername()));
+        String token = jwtUtils.generateToken(user.getUsername());
+
+        return UserInfo.of(user, token);
     }
 }
 

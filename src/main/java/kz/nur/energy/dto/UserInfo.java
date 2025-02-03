@@ -30,6 +30,21 @@ public class UserInfo {
     @Schema(description = "Тип пользователя")
     private String userType;
 
+    @Schema(description = "Токен")
+    private String token;
+
+    public static UserInfo of(User user, String token){
+        return UserInfo.builder()
+                .id(String.valueOf(user.getId()))
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phoneNumber(user.getMobileNum())
+                .email(user.getEmail())
+                .userType(user.getUserType().getId())
+                .token(token)
+                .build();
+    }
+
     public static UserInfo of(User user){
         return UserInfo.builder()
                 .id(String.valueOf(user.getId()))

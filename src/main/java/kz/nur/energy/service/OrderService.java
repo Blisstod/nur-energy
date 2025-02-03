@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,16 +31,22 @@ public class OrderService {
     @Autowired
     private ControlPointRepository controlPointRepository;
 
+    @Autowired
+    private DistanceService distanceService;
+
     @Transactional
     public OrderResponse create(OrderRequest request) {
         Order order = new Order();
         order.setPhoneNumber(request.getPhoneNumber());
-        order.setPrice(request.getPrice());
         order.setPickUpTime(getPickUpTime(request.getPickUpTime()));
-        order.setStartPoint(getControlPoint(request.getStartPoint().getId()));
-        order.setDestinationPoint(getControlPoint(request.getDestinationPoint().getId()));
         order.setUser(SecurityUtils.getCurrentUser());
         order.setStatus(OrderStatus.NEW);
+
+        double distance = distanceService.calculateDistance(request.getStartPoint(), request.getDestinationPoint());
+        int price = distanceService.calculatePrice(distance);
+
+        order.setDistance(distance);
+        order.setPrice(BigDecimal.valueOf(price));
 
         orderRepository.save(order);
         return OrderResponse.of(order);

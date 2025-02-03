@@ -35,7 +35,6 @@ public class BalanceService {
     }
 
     public Balance getBalance(User user){
-
         return balanceRepository.findById(user.getBalance().getId())
                 .orElseThrow(() -> new RuntimeException("Balance not found"));
     }

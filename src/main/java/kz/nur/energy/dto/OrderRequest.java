@@ -18,12 +18,6 @@ public class OrderRequest {
     @Schema(description = "Номер телефона клиента", example = "+77011234567")
     private String phoneNumber;
 
-    @Schema(description = "Цена поездки", example = "1500.00")
-    private BigDecimal price;
-
-    @Schema(description = "Расстояние поездки в км", example = "12.5")
-    private Double distance;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @Schema(description = "Время подачи", example = "2025-02-01 14:30:00.000")
     private String pickUpTime;

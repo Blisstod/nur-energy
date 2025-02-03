@@ -41,7 +41,7 @@ public class UserController {
 
     @Operation(summary = "Вход в систему", description = "Аутентифицирует пользователя по номеру телефона и паролю")
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TokenResponse> login(
+    public ResponseEntity<UserInfo> login(
             @RequestBody @Validated LoginUserRequest loginUserRequest
     ) {
         return ResponseEntity.ok(userService.login(loginUserRequest));

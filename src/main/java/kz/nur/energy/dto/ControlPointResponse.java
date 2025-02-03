@@ -12,8 +12,6 @@ import java.util.UUID;
 @Setter
 @Builder
 public class ControlPointResponse {
-    @Schema(description = "Идентификатор заказа", example = "550e8400-e29b-41d4-a716-446655440000")
-    private UUID id;
 
     @Schema(description = "Адрес", example = "Медеу")
     private String address;
@@ -29,7 +27,6 @@ public class ControlPointResponse {
             return ControlPointResponse.builder().build();
         }
         return ControlPointResponse.builder()
-                .id(point.getId())
                 .address(point.getAddress())
                 .longitude(String.valueOf(point.getLongitude()))
                 .latitude(String.valueOf(point.getLatitude()))
