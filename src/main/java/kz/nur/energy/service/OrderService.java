@@ -1,5 +1,6 @@
 package kz.nur.energy.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import kz.nur.energy.dto.OrderRequest;
 import kz.nur.energy.dto.OrderResponse;
 import kz.nur.energy.entity.ControlPoint;
@@ -34,6 +35,9 @@ public class OrderService {
     @Autowired
     private DistanceService distanceService;
 
+    @Autowired
+    private BalanceService balanceService;
+
     @Transactional
     public OrderResponse create(OrderRequest request) {
         Order order = new Order();
@@ -55,14 +59,14 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderResponse getById(UUID orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
         return OrderResponse.of(order);
     }
 
     @Transactional(readOnly = true)
     public List<OrderResponse> getActiveOrders() {
         List<OrderStatus> activeStatuses = List.of(OrderStatus.NEW, OrderStatus.ACCEPTED, OrderStatus.IN_PROGRESS, OrderStatus.CANCELLED);
-        return orderRepository.findActiveOrders(activeStatuses)
+        return orderRepository.findOrdersByStatus(activeStatuses)
                 .stream()
                 .map(OrderResponse::of)
                 .toList();
@@ -71,7 +75,7 @@ public class OrderService {
     @Transactional
     public OrderResponse cancelOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
 //        order.setCar(null);
         order.setDriver(null);
         order.setDriver(null);
@@ -83,13 +87,55 @@ public class OrderService {
     @Transactional
     public OrderResponse bookOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
         User driver = SecurityUtils.getCurrentUser();
         order.setStatus(OrderStatus.ACCEPTED);
         order.setDriver(driver);
 //        order.setCar(driver.getAutoList().get(0));
         orderRepository.save(order);
         return OrderResponse.of(order);
+    }
+
+    @Transactional
+    public List<OrderResponse> getVacantOrders(){
+        List<OrderStatus> activeStatuses = List.of(OrderStatus.NEW);
+        return orderRepository.findOrdersByStatus(activeStatuses)
+                .stream()
+                .map(OrderResponse::of)
+                .toList();
+    }
+
+    @Transactional
+    public List<OrderResponse> getOrders(){
+        User user = SecurityUtils.getCurrentUser();
+        List<Order> orders = orderRepository.findByUser(user);
+        return orders.stream().map(OrderResponse::of).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderResponse> getBookedOrders() {
+        User driver = SecurityUtils.getCurrentUser();
+        return orderRepository.findByDriverAndStatus(driver, OrderStatus.ACCEPTED)
+                .stream().map(OrderResponse::of).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderResponse> getFinishedOrders() {
+        User driver = SecurityUtils.getCurrentUser();
+        return orderRepository.findByDriverAndStatus(driver, OrderStatus.FINISHED)
+                .stream().map(OrderResponse::of).toList();
+    }
+
+    @Transactional
+    public String finishOrder(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        order.setStatus(OrderStatus.FINISHED);
+
+        balanceService.taxiPayment(order);
+
+        orderRepository.save(order);
+        return "Заказ закончен!";
     }
 
     public void notifyDrivers(OrderResponse response) {

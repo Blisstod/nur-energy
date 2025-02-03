@@ -67,5 +67,23 @@ public class OrderController {
         return ResponseEntity.ok(orderService.bookOrder(orderId));
     }
 
-    // TODO: vacant orders for drivers
+    @Operation(summary = "Получить вакантные заказы для водителя", description = "Выдает вакантные заказы для водителя, чтобы те могли принять")
+    @GetMapping(value = "/vacant", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<OrderResponse>> getVacant() {
+        return ResponseEntity.ok(orderService.getVacantOrders());
+    }
+
+    @Operation(summary = "Получить заказы которые создал пассажир", description = "Выдает те заказы которые создал сам пассажир")
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<OrderResponse>> getAll() {
+        return ResponseEntity.ok(orderService.getOrders());
+    }
+
+    @Operation(summary = "Закончить заказ", description = "Закончить заказ")
+    @PostMapping(value = "/finish/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> finish(
+            @Parameter(description = "ID заказа") @PathVariable UUID orderId
+    ){
+        return ResponseEntity.ok(orderService.finishOrder(orderId));
+    }
 }

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Table(name = "order")
+@Table(name = "orders")
 @Entity(name = "order")
 @EntityListeners(AuditingEntityListener.class)
 public class Order {
