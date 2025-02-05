@@ -138,6 +138,16 @@ public class OrderService {
         return "Заказ закончен!";
     }
 
+    @Transactional
+    public String deleteOrder(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        order.setStatus(OrderStatus.FINISHED);
+
+        orderRepository.delete(order);
+        return "Order has been deleted!";
+    }
+
     public void notifyDrivers(OrderResponse response) {
         // Логика отправки уведомлений водителям
     }

@@ -86,4 +86,11 @@ public class OrderController {
     ){
         return ResponseEntity.ok(orderService.finishOrder(orderId));
     }
+
+    @DeleteMapping(value = "/delete/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> delete(
+            @Parameter(description = "ID заказ") @PathVariable UUID orderId
+    ) {
+        return ResponseEntity.ok(orderService.deleteOrder(orderId));
+    }
 }
