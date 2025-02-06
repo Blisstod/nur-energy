@@ -58,6 +58,7 @@ public class UserService {
         newUser.setEmail(registerUserRequest.getEmail());
         newUser.setUserType(registerUserRequest.getUserType());
         newUser.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
+        userRepository.save(newUser);
 
         Balance newBalance = new Balance();
         newBalance.setUser(newUser);
