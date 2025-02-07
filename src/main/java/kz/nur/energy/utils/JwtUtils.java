@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+// for jwt
 @Component
 public class JwtUtils {
     private final String jwtSecret = "yourSecretKey"; // Замените на секретный ключ
