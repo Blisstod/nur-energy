@@ -9,6 +9,7 @@ import kz.nur.energy.entity.User;
 import kz.nur.energy.repository.BalanceRepository;
 import kz.nur.energy.repository.UserRepository;
 import kz.nur.energy.utils.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserService {
     @Autowired
@@ -72,6 +74,8 @@ public class UserService {
 
     @Transactional
     public UserInfo login(LoginUserRequest loginUserRequest) {
+        log.info("Login user request: {}", loginUserRequest.toString());
+
         String mobileNum = loginUserRequest.getMobileNum();
         String password = loginUserRequest.getPassword();
 

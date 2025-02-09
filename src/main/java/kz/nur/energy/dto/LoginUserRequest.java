@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class LoginUserRequest {
 
     @Schema(description = "Мобильный номер", example = "+77011234567")
