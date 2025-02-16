@@ -33,6 +33,9 @@ public class OrderService {
     private ControlPointRepository controlPointRepository;
 
     @Autowired
+    private ControlPointService controlPointService;
+
+    @Autowired
     private DistanceService distanceService;
 
     @Autowired
@@ -41,10 +44,16 @@ public class OrderService {
     @Transactional
     public OrderResponse create(OrderRequest request) {
         Order order = new Order();
+        ControlPoint startPoint = controlPointService.create(request.getStartPoint());
+        ControlPoint destinationPoint = controlPointService.create(request.getDestinationPoint());
         order.setPhoneNumber(request.getPhoneNumber());
         order.setPickUpTime(getPickUpTime(request.getPickUpTime()));
         order.setUser(SecurityUtils.getCurrentUser());
         order.setStatus(OrderStatus.NEW);
+        order.setStartPoint(startPoint);
+        order.setStartAddress(startPoint.getAddress());
+        order.setDestinationPoint(destinationPoint);
+        order.setDestinationAddress(destinationPoint.getAddress());
 
         double distance = distanceService.calculateDistance(request.getStartPoint(), request.getDestinationPoint());
         int price = distanceService.calculatePrice(distance);

@@ -28,4 +28,14 @@ public class ControlPointService {
         ControlPoint point = controlPointRepository.getById(id);
         return ControlPointResponse.of(point);
     }
+
+    @Transactional
+    public ControlPoint create(ControlPointResponse dto) {
+        ControlPoint point = new ControlPoint();
+        point.setAddress(dto.getAddress());
+        point.setLatitude(Double.valueOf(dto.getLatitude()));
+        point.setLongitude(Double.valueOf(dto.getLongitude()));
+        point.setIsSystem(false);
+        return controlPointRepository.save(point);
+    }
 }
